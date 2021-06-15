@@ -15753,7 +15753,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0ee120a8bd717d4abf9ef56785b15e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 1000013620582324}
   explosionSound: {fileID: 8300000, guid: 5699dddcce16c4543b95951c4ce0e092, type: 3}
 --- !u!65 &6491944780927599878
 BoxCollider:

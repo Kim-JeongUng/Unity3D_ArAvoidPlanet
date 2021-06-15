@@ -5,11 +5,13 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     public AudioClip explosionSound;
+    public GameObject explosion;
+
     private void Update()
     {
         transform.Translate(Vector3.forward * Time.deltaTime * 80, Space.Self);
 
-        if(GameObject.Find("Ship").GetComponent<AllSkill>().bomb)
+        if(GameObject.Find("Ship").GetComponent<AllSkill>().bomb) //폭탄 스킬 사용시
         {
             StartCoroutine(Crash());
         }
@@ -33,6 +35,7 @@ public class Asteroid : MonoBehaviour
     }
     IEnumerator Crash()
     {
+        explosion.SetActive(true);
         this.gameObject.GetComponent<MeshRenderer>().enabled = false;
         this.gameObject.GetComponent<AudioSource>().PlayOneShot(explosionSound);
         yield return new WaitForSeconds(0.7f);

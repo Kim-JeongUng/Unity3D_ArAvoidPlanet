@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Items : MonoBehaviour
 {
+    public bool oneTimeCheck = true;
+    public string thisItemName;
+    public AudioClip equipSound;
     bool LBtnUse = false;
     bool RBtnUse = false;
 
-    public bool oneTimeCheck = true;
-    public string thisItemName;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,13 +20,13 @@ public class Items : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!LBtnUse && !RBtnUse)
+        if(!LBtnUse && !RBtnUse) //장착되지 않음
             transform.Translate(Vector3.forward * Time.deltaTime * 100, Space.Self);
 
-        if (LBtnUse || RBtnUse)
+        if (LBtnUse || RBtnUse) //장착 완료
         {
             transform.localPosition = Vector3.zero;
-            transform.Rotate(0, 0, 0);
+            transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f); 
             transform.parent.GetChild(0).GetComponent<TextMesh>().text = thisItemName;
             if (LBtnUse && GameObject.Find("ImageTarget").GetComponent<vbButton>().LbPressed)
             {
@@ -42,21 +43,25 @@ public class Items : MonoBehaviour
     {
         if(other.gameObject.name == "Ship" && oneTimeCheck)
         {
-            if (other.gameObject.GetComponent<SpaceShip>().SetPosChild1 == 0) //아이템이 없으면 부모를 ItemSetPosition로 잡음
+            if (other.gameObject.GetComponent<SpaceShip>().SetPosChild1 == 0) //아이템칸이 비었으면 
             {
-                this.transform.parent = other.gameObject.GetComponent<SpaceShip>().ItemSetPosition[0];
+                this.gameObject.GetComponent<AudioSource>().PlayOneShot(equipSound);
+                other.gameObject.GetComponent<SpaceShip>().oneTimeMessage("Get "+ thisItemName);
+                this.transform.parent = other.gameObject.GetComponent<SpaceShip>().ItemSetPosition[0]; //부모를 ItemSetPosition로 잡음
                 LBtnUse =  true;
                 oneTimeCheck = false;
             }
             else if(other.gameObject.GetComponent<SpaceShip>().SetPosChild2 == 0)
             {
+                this.gameObject.GetComponent<AudioSource>().PlayOneShot(equipSound);
+                other.gameObject.GetComponent<SpaceShip>().oneTimeMessage("Get " + thisItemName);
                 this.transform.parent = other.gameObject.GetComponent<SpaceShip>().ItemSetPosition[1];
                 RBtnUse = true;
                 oneTimeCheck = false;
             }
             else
             {
-                other.gameObject.GetComponent<SpaceShip>().oneTimeMessage("NotUsed");
+                other.gameObject.GetComponent<SpaceShip>().oneTimeMessage("Equip P Full");
             }
         }
         if (other.gameObject.CompareTag("DestroyCollider"))
@@ -67,13 +72,7 @@ public class Items : MonoBehaviour
 
     void UseAbility()
     {
-        Debug.Log("used");
         GameObject.Find("Ship").GetComponent<AllSkill>().UseSkill(thisItemName);
-        if(thisItemName == "Bomb")
-        {
-            this.gameObject.GetComponent<AudioSource>().Play();
-        }
-        //GameObject.Find("Ship").GetComponent<SpaceShip>().InvincibleObj.SetActive(true);
         if (LBtnUse)
             transform.parent.GetChild(0).GetComponent<TextMesh>().text = "Item1";
         else if(RBtnUse)

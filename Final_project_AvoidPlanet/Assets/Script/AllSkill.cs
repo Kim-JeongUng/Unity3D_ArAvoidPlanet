@@ -35,6 +35,16 @@ public class AllSkill : MonoBehaviour
                 InviObj.SetActive(false);
             }
         }
+        if (bomb)
+        {
+            float bombtimer = 0.0f;
+            bombtimer += Time.deltaTime;
+            if (bombtimer > 0.5f)
+            {
+                bomb = false;
+            }
+        }
+        
     }
     public void UseSkill(string SkillName) //SkilName Set : Invincible , Smaller, Heal, Bomb
     {
@@ -54,25 +64,22 @@ public class AllSkill : MonoBehaviour
                 this.gameObject.GetComponent<AudioSource>().PlayOneShot(audioClips[0]);
                 InviObj.SetActive(true);
             }
-            Debug.Log(SkillName);
         } 
         if (SkillName == "Smaller") //10초간 크기가 0.8 줄어듬
         {
             transform.localScale = transform.localScale * 0.8f;//new Vector3(0.9f, 0.9f, 0.9f); 
             StartCoroutine(Bigger());
             this.gameObject.GetComponent<AudioSource>().PlayOneShot(audioClips[1]);
-            Debug.Log(SkillName);
         }
         if (SkillName == "Heal")
         {
             SpaceShip.Hp += 10;
-            Debug.Log(SkillName);
+            this.gameObject.GetComponent<AudioSource>().PlayOneShot(audioClips[2]);
         }
         if (SkillName == "Bomb")
         {
             bomb = true;
-            this.gameObject.GetComponent<AudioSource>().PlayOneShot(audioClips[2]);
-            Debug.Log(SkillName);
+            this.gameObject.GetComponent<AudioSource>().PlayOneShot(audioClips[3]);
         }
     }
     IEnumerator Bigger()

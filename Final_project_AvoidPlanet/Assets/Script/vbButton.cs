@@ -19,7 +19,6 @@ public class vbButton : MonoBehaviour, IVirtualButtonEventHandler
 
     private float tempLbTimer;
     private float tempRbTimer;
-    //public Animator cubeAni;
 
     // Use this for initialization
     void Start()
@@ -60,7 +59,6 @@ public class vbButton : MonoBehaviour, IVirtualButtonEventHandler
         if(vb.name == "rightVirtualButton"){
             TempRbPressed = true;
         }
-
     }
 
     public void OnButtonReleased(VirtualButtonBehaviour vb)

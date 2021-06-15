@@ -8,14 +8,15 @@ public class SpaceShip : MonoBehaviour
 {
     public GameObject ship;
     public GameObject oneTimeText;
+    public GameObject explosion;
     public AudioClip DeadSound;
-    public Material DieMt;
-    public Material LiveMt;
+    public AudioClip detach;
 
 
-    public float cur_angle;
-    float prev_angle;
-    float delta_angle;
+    public Material DieMt;      //죽을 경우 나오는 머테리얼
+    public Material LiveMt;     //일반 상황
+
+
     public static float timer;
     public static float Hp = 100;
 
@@ -23,7 +24,7 @@ public class SpaceShip : MonoBehaviour
     public GameObject[] GameItems;
     public Transform[] ItemSetPosition;
 
-    public int SetPosChild1;
+    public int SetPosChild1; 
     public int SetPosChild2;
 
     public GameObject InvincibleObj; // 무적 구
@@ -38,7 +39,6 @@ public class SpaceShip : MonoBehaviour
         this.transform.GetChild(0).GetComponent<Renderer>().material = LiveMt;
         Hp = 100;
         timer = 0.0f;
-        cur_angle = ship.transform.eulerAngles.y;
         
     }
 
@@ -52,20 +52,21 @@ public class SpaceShip : MonoBehaviour
             {
                 Hp-= 3;
                 attachTimer = 0;
+                this.gameObject.GetComponent<AudioSource>().PlayOneShot(detach);
             }
         }
 
         //Hp
         HpGauge.fillAmount = Hp/100;
+
+        //죽을 경우 시간 기록
         if (Hp <= 0)
         {
-            PlayerPrefs.SetFloat("Score", timer);
-            this.transform.GetChild(0).GetComponent<Renderer>().material = DieMt;
             StartCoroutine(Die());
         }
-
         timer += Time.deltaTime;
         
+        //메세지 타이머(3초)
         if (ismessage == true)
             m_Timer += Time.deltaTime;
         if (m_Timer >= 3.0f)
@@ -74,7 +75,9 @@ public class SpaceShip : MonoBehaviour
             oneTimeText.GetComponent<Text>().text = "Message Area";
             m_Timer = 0;
         }
-        SetPosChild1 = ItemSetPosition[0].transform.childCount-1;
+
+        //위치에 아이템이 있는지 판별, 1을 빼는 이유 : 기본으로 들어있는 ItemText(Canvas)를 제함
+        SetPosChild1 = ItemSetPosition[0].transform.childCount-1; //childCount가 2면 아이템이 있는 것
         SetPosChild2 = ItemSetPosition[1].transform.childCount-1;
     }
     
@@ -87,6 +90,10 @@ public class SpaceShip : MonoBehaviour
     }
     IEnumerator Die()
     {
+        PlayerPrefs.SetFloat("Score", timer);
+        explosion.SetActive(true);
+        this.gameObject.GetComponent<AudioSource>().PlayOneShot(DeadSound);
+        this.transform.GetChild(0).GetComponent<Renderer>().material = DieMt;
         oneTimeMessage("GameOver!");
         yield return new WaitForSeconds(3.0f);
         SceneManager.LoadScene("EndScene");

@@ -25,7 +25,7 @@ public class AllSkill : MonoBehaviour
         if (HpFixed) //invincibleW
         {
             timer += Time.deltaTime;
-            SpaceShip.Hp = pastHp;
+            SpaceShip.Hp = pastHp; 
             GetComponent<SpaceShip>().oneTimeMessage("무적");
             if (timer > fixTimerMax)
             {

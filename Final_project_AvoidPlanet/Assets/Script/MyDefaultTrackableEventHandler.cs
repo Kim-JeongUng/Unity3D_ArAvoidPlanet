@@ -8,6 +8,7 @@ public class MyDefaultTrackableEventHandler : DefaultTrackableEventHandler
     {
         if (mTrackableBehaviour)
         {
+            { 
             var rendererComponents = mTrackableBehaviour.GetComponentsInChildren<Renderer>(true);
             var colliderComponents = mTrackableBehaviour.GetComponentsInChildren<Collider>(true);
             var canvasComponents = mTrackableBehaviour.GetComponentsInChildren<Canvas>(true);
@@ -33,7 +34,7 @@ public class MyDefaultTrackableEventHandler : DefaultTrackableEventHandler
             // Enable animations:
             foreach (var component in animationComponents)
                 component.enabled = true;
-
+            } 
             isAttach = true;
         }
     }
